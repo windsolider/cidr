@@ -1,0 +1,21 @@
+{
+    "name": "regjs",
+    "version": "0.0.1",
+    "description": "IPv6/IPv4 address parsing and manipulation",
+    "keywords": [
+        "ip",
+        "ipv4",
+        "ipv6",
+        "cidr",
+        "subnet"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/windsolider/regjs.git"
+    },
+    "dependencies": {},
+    "devDependencies": {},
+    "scripts": {},
+    "author": "windsolider",
+    "license": "MPL-2.0"
+}
