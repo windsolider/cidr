@@ -5,6 +5,6 @@ export {
 
 
 export {
-    subnetCidrReg,
-    urlReg
-} from './net'
+    simplifyIpv6,
+    expandIpv6
+} from './ip'
