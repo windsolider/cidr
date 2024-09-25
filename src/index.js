@@ -1,8 +1,3 @@
-export {
-    emailReg,
-    positiveIntegerReg
-} from './common'
-
 
 export {
     simplifyIpv6,
