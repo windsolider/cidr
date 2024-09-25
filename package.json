@@ -1,5 +1,5 @@
 {
-    "name": "regjs",
+    "name": "cidr",
     "version": "0.0.1",
     "description": "IPv6/IPv4 address parsing and manipulation",
     "keywords": [
@@ -11,7 +11,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/windsolider/regjs.git"
+        "url": "https://github.com/windsolider/cidr.git"
     },
     "dependencies": {},
     "devDependencies": {},
