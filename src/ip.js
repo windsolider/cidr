@@ -62,9 +62,31 @@ class IPv6 {
     }
     abbreviate(val) {
         if (!ipv6Reg.test(val)) {
-            throw new Error('Invalid IP address.');
+            console.error('Invalid IP address.')
         }
         return simplifyIpv6(val)
+    }
+    maskMatch(value){
+        let subnet, mask = [], ipInt = [], ipStr, ipSupple;
+        subnet = value.split('/')[0]; 
+        mask = value.split('/')[1]; 
+        ipInt = subnet.split('.');
+        ipStr = ''; 
+        ipSupple = '00000000'; 
+        for (let i = 0; i < ipInt.length; i++) {
+            ipInt[i] = parseInt(ipInt[i]).toString(2); 
+            if (ipInt[i].length < 8) {
+                let ipLack = ipSupple.slice(0, 8 - ipInt[i].length); 
+                ipInt[i] = ipLack + ipInt[i];
+            }
+            ipStr = ipStr + ipInt[i];
+        }
+        let localLast = ipStr.lastIndexOf('1') + 1;
+        if (mask < localLast) {
+          return false;
+        } else {
+          return true;
+        }
     }
     expand(val) {
         if (!ipv6Reg.test(val)) {
@@ -76,9 +98,11 @@ class IPv6 {
         if (!ithis.isIPv4Cidr(ipv4Cidr)) {
             throw new Error('Invalid IP address.');
         }
+        if (!this.maskMatch) {
+            throw new Error('The network segment IP address and mask do not match.')
+        }
         let [ip, prefix] = ipv4Cidr.split('/');
         let prefixLength = parseInt(prefix, 10);
-        console.log(typeof prefixLength)
         if (isNaN(prefixLength) || prefixLength < 0 || prefixLength > 32) {
             throw new Error('Invalid prefix length');
         }
