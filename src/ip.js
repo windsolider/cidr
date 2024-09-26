@@ -1,4 +1,4 @@
-import {ipv4Reg,ipv4CidrReg,ipv6Reg,ipv6CidrReg} from './constants.js';
+import {RE_IPV4,RE_IPV4_CIDR,RE_IPV6,RE_IPV6_CIDR} from './constants.js';
 
 
 export function simplifyIpv6(ipv6) {
@@ -43,25 +43,25 @@ export function expandIpv6(ipv6) {
     return parts.join(':');
 }
 
-class IPv6 {
+class CIDR {
     constructor() {
 
     }
 
     isIPv4(val) {
-        return ipv4Reg.test(val);
+        return RE_IPV4.test(val);
     }
     isIPv4Cidr(val) {
-        return ipv4CidrReg.test(val);
+        return RE_IPV4_CIDR.test(val);
     }
     isIPv6(val) {
-        return ipv6Reg.test(val);
+        return RE_IPV6.test(val);
     }
     isIpv6Cidr(val) {
-        return ipv6CidrReg.test(val);
+        return RE_IPV6_CIDR.test(val);
     }
     abbreviate(val) {
-        if (!ipv6Reg.test(val)) {
+        if (!RE_IPV6.test(val)) {
             console.error('Invalid IP address.')
         }
         return simplifyIpv6(val)
@@ -89,7 +89,7 @@ class IPv6 {
         }
     }
     expand(val) {
-        if (!ipv6Reg.test(val)) {
+        if (!RE_IPV6.test(val)) {
             throw new Error('Invalid IP address.');
         }
         return expandIpv6(val)
