@@ -1,7 +1,7 @@
 import {RE_IPV4,RE_IPV4_CIDR,RE_IPV6,RE_IPV6_CIDR} from './constants.js';
 
 
-export function simplifyIpv6(ipv6) {
+function simplifyIpv6(ipv6) {
     let parts = ipv6.split(':');
     parts = parts.map(part => part.replace(/^0+/, '') || '0');
     let longestZeroSequence = '';
@@ -32,7 +32,7 @@ export function simplifyIpv6(ipv6) {
     return simplified;
 }
 
-export function expandIpv6(ipv6) {
+function expandIpv6(ipv6) {
     let parts = ipv6.split(':');
     const doubleColonIndex = parts.indexOf('');
     if (doubleColonIndex !== -1) {
@@ -52,7 +52,23 @@ class CIDR {
         return RE_IPV4.test(val);
     }
     isIPv4Cidr(val) {
-        return RE_IPV4_CIDR.test(val);
+        if(typeof val !== 'string') {
+            throw new Error('Invalid input.');
+        }
+        if (!RE_IPV4_CIDR.test(val)) {
+            throw new Error('Invalid IP address.');
+        }
+        let [ip, prefix] = val.split('/');
+        let prefixLength = parseInt(prefix, 10);
+
+        if (!RE_IPV4.test(ip)) {
+            throw new Error('Invalid IP address.');
+        }
+        if (prefixLength<0 || prefixLength > 32) {
+            throw new Error('Invalid Cidr.');
+        }
+
+        return this.maskMatch(val);
     }
     isIPv6(val) {
         return RE_IPV6.test(val);
@@ -67,25 +83,17 @@ class CIDR {
         return simplifyIpv6(val)
     }
     maskMatch(value){
-        let subnet, mask = [], ipInt = [], ipStr, ipSupple;
-        subnet = value.split('/')[0]; 
-        mask = value.split('/')[1]; 
-        ipInt = subnet.split('.');
-        ipStr = ''; 
-        ipSupple = '00000000'; 
-        for (let i = 0; i < ipInt.length; i++) {
-            ipInt[i] = parseInt(ipInt[i]).toString(2); 
-            if (ipInt[i].length < 8) {
-                let ipLack = ipSupple.slice(0, 8 - ipInt[i].length); 
-                ipInt[i] = ipLack + ipInt[i];
-            }
-            ipStr = ipStr + ipInt[i];
-        }
-        let localLast = ipStr.lastIndexOf('1') + 1;
-        if (mask < localLast) {
-          return false;
+        let [ip, prefix] = value.split('/');
+        let ipStr = ip.split('.').map(item =>{
+            return parseInt(item,10).toString(2).padStart(8, '0')
+        }).reduce((init,next) => init + next);
+        let localLast = ipStr.lastIndexOf(1) + 1;
+        if (prefix < localLast) {
+            console.log('网段IP地址与掩码不匹配')
+            return false;
         } else {
-          return true;
+            console.log('网段IP地址与掩码匹配')
+            return true;
         }
     }
     expand(val) {
@@ -127,4 +135,6 @@ class CIDR {
     }
 
 }
+
+export default CIDR;
 
