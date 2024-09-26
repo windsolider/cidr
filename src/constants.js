@@ -16,3 +16,7 @@ export const RE_MAC_ADDRESS = /[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}:[A-F\
 export const RE_PORT = /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/;
 //域名正则
 export const RE_DOMAIN = /^([a-zA-Z0-9]([a-zA-Z0-9-_]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,11}$/;
+
+export const BITS_IPV4 = 32;
+
+export const BITS_IPV6 = 128;

@@ -1,4 +1,4 @@
-import {RE_IPV4,RE_IPV4_CIDR,RE_IPV6,RE_IPV6_CIDR} from './constants.js';
+import {RE_IPV4,RE_IPV4_CIDR,RE_IPV6,RE_IPV6_CIDR,BITS_IPV4} from './constants.js';
 
 
 function simplifyIpv6(ipv6) {
@@ -64,7 +64,7 @@ class CIDR {
         if (!RE_IPV4.test(ip)) {
             throw new Error('Invalid IP address.');
         }
-        if (prefixLength<0 || prefixLength > 32) {
+        if (prefixLength<0 || prefixLength > BITS_IPV4) {
             throw new Error('Invalid Cidr.');
         }
 
@@ -84,10 +84,8 @@ class CIDR {
     }
     maskMatch(value){
         let [ip, prefix] = value.split('/');
-        let ipStr = ip.split('.').map(item =>{
-            return parseInt(item,10).toString(2).padStart(8, '0')
-        }).reduce((init,next) => init + next);
-        let localLast = ipStr.lastIndexOf(1) + 1;
+        let ips = ip.split('.').map(item => parseInt(item,10).toString(2).padStart(8, '0')).reduce((init,next) => init + next);
+        let localLast = ips.lastIndexOf(1) + 1;
         if (prefix < localLast) {
             console.log('网段IP地址与掩码不匹配')
             return false;
