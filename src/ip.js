@@ -64,7 +64,7 @@ class CIDR {
         if (!RE_IPV4.test(ip)) {
             throw new Error('Invalid IP address.');
         }
-        if (prefixLength<0 || prefixLength > BITS_IPV4) {
+        if (isNaN(prefixLength) || prefixLength<0 || prefixLength > BITS_IPV4) {
             throw new Error('Invalid Cidr.');
         }
 
@@ -108,21 +108,16 @@ class CIDR {
             throw new Error('The network segment IP address and mask do not match.')
         }
         let [ip, prefix] = ipv4Cidr.split('/');
-        let prefixLength = parseInt(prefix, 10);
-        if (isNaN(prefixLength) || prefixLength < 0 || prefixLength > 32) {
-            throw new Error('Invalid prefix length');
-        }
-        
         let ipParts = ip.split('.').map(Number);
         let maskParts = [];
         for (let i = 0; i < 4; i++) {
-            maskParts.push(prefixLength >= 8 ? 255 : (prefixLength > 0 ? (256 - Math.pow(2, 8 - prefixLength)) : 0));
-            prefixLength -= 8;
+            maskParts.push(prefix >= 8 ? 255 : (prefix > 0 ? (256 - Math.pow(2, 8 - prefix)) : 0));
+            prefix -= 8;
         }
         
         let networkIp = ipParts.map((part, index) => part & maskParts[index]);
         let broadcastIp = ipParts.map((part, index) => part | (255 - maskParts[index]));
-        let availableHosts = Math.pow(2, 32 - prefixLength) - 2;
+        let availableHosts = Math.pow(2, 32 - prefix) - 2;
         
         return {
             ipv4Cidr,
