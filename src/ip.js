@@ -43,6 +43,13 @@ function expandIpv6(ipv6) {
     return parts.join(':');
 }
 
+function ipToBinary(ip) {
+    return ip.split('.').map(num => parseInt(num, 10).toString(2).padStart(8, '0')).join('');
+}
+
+function binaryToIp(binary) {
+    return binary.match(/.{1,8}/g).map(num => parseInt(num, 2)).join('.');
+}
 class CIDR {
     constructor() {
 
@@ -108,11 +115,12 @@ class CIDR {
             throw new Error('The network segment IP address and mask do not match.')
         }
         let [ip, prefix] = ipv4Cidr.split('/');
+        let prefixLength = prefix
         let ipParts = ip.split('.').map(Number);
         let maskParts = [];
         for (let i = 0; i < 4; i++) {
-            maskParts.push(prefix >= 8 ? 255 : (prefix > 0 ? (256 - Math.pow(2, 8 - prefix)) : 0));
-            prefix -= 8;
+            maskParts.push(prefixLength >= 8 ? 255 : (prefixLength > 0 ? (256 - Math.pow(2, 8 - prefixLength)) : 0));
+            prefixLength -= 8;
         }
         
         let networkIp = ipParts.map((part, index) => part & maskParts[index]);

@@ -1,5 +1,2 @@
-
-export {
-    simplifyIpv6,
-    expandIpv6
-} from './ip'
+import CIDR from './ip.js';
+export default CIDR;
